@@ -10,7 +10,8 @@ const fs        = require("fs")
 const path      = require("path")
 const glob      = require("glob")
 const shell     = require("shelljs")
-const execa     = require("execa")
+// const execa     = require("execa");
+const execaSync = (...args) => import('execa').then(execa => {return execa.execaSync(...args);});
 const zip       = require("cross-zip")
 const DSIG      = require("dsig")
 const PromptPW  = require("prompt-password")
@@ -58,7 +59,7 @@ const PromptPW  = require("prompt-password")
     if (os.platform() === "win32") {
         /*  run Electron-Builder to package the application  */
         console.log("++ packaging App as an Electron distribution for Windows platform")
-        execa.sync(electronbuilder, [ "--win", `--${arch1}` ],
+        execaSync(electronbuilder, [ "--win", `--${arch1}` ],
             { stdin: "inherit", stdout: "inherit", stderr: "inherit" })
 
         /*  pack application into a distribution archive
@@ -72,7 +73,7 @@ const PromptPW  = require("prompt-password")
     else if (os.platform() === "darwin") {
         /*  run Electron-Builder to package the application  */
         console.log("++ packaging App as an Electron distribution for macOS platform")
-        execa.sync(electronbuilder, [ "--mac", `--${arch1}` ],
+        execaSync(electronbuilder, [ "--mac", `--${arch1}` ],
             { stdin: "inherit", stdout: "inherit", stderr: "inherit" })
 
         /*  pack application into a distribution archive
@@ -87,7 +88,7 @@ const PromptPW  = require("prompt-password")
     else if (os.platform() === "linux") {
         /*  run Electron-Builder to package the application  */
         console.log("++ packaging App as an Electron distribution for Linux platform")
-        execa.sync(electronbuilder, [ "--linux", `--${arch1}` ],
+        execaSync(electronbuilder, [ "--linux", `--${arch1}` ],
             { stdin: "inherit", stdout: "inherit", stderr: "inherit" })
 
         /*  pack application into a distribution archive  */
@@ -101,4 +102,3 @@ const PromptPW  = require("prompt-password")
 })().catch((err) => {
     console.log(`** npm: package: ERROR: ${err}`)
 })
-

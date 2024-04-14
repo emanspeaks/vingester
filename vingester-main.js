@@ -32,6 +32,19 @@ const util        = require("./vingester-util.js")
 const log         = require("./vingester-log.js").scope("main")
 const pkg         = require("./package.json")
 
+// const os = require('node:os')
+//
+// // on macOS
+// const vueDevToolsPath = path.join(
+//   os.homedir(),
+//   '/Library/Application Support/Google/Chrome/Default/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/6.5.0_0'
+// )
+//
+// electron.app.whenReady().then(async () => {
+//   console.log(vueDevToolsPath)
+//   await electron.session.defaultSession.loadExtension(vueDevToolsPath)
+// })
+
 /*  get rid of unnecessary security warnings when debugging  */
 if (typeof process.env.DEBUG !== "undefined") {
     delete process.env.ELECTRON_ENABLE_SECURITY_WARNINGS
@@ -114,8 +127,8 @@ electron.app.commandLine.appendSwitch("high-dpi-support", 1)
 electron.app.commandLine.appendSwitch("force-device-scale-factor", 1)
 
 /*  optionally initialize NDI library  */
-if (grandiose.isSupportedCPU())
-    grandiose.initialize()
+// if (grandiose.isSupportedCPU())
+//     grandiose.initialize()
 
 /*  initialize store  */
 const store = new Store()
@@ -708,6 +721,7 @@ electron.app.on("ready", async () => {
             log.info("bring user interface into final state (shown and focused)")
             control.show()
             control.focus()
+            // control.webContents.openDevTools()
         }
 
         /*  optionally auto-start browser instances
@@ -979,8 +993,8 @@ electron.app.on("ready", async () => {
     for (const signal of [ "SIGINT", "SIGTERM" ]) {
         process.on(signal, () => {
             /*  optionally destroy NDI library  */
-            if (grandiose.isSupportedCPU())
-                grandiose.destroy()
+            // if (grandiose.isSupportedCPU())
+            //     grandiose.destroy()
 
             /*  finally destroy electron  */
             electron.app.quit()
@@ -992,4 +1006,3 @@ electron.app.on("ready", async () => {
 
     log.info("up and running")
 })
-

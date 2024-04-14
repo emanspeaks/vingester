@@ -17,14 +17,16 @@
 
     /*  require external modules  */
     const electron     = require("electron")
-    const log          = require("./vingester-log.js").scope(`browser/content-${cfg.id}`)
+    // const log          = require("./vingester-log.js").scope(`browser/content-${cfg.id}`)
 
     /*  provide global Vingester environment (for postload)  */
     let visibility = cfg.D ? "visible" : "hidden"
     electron.contextBridge.exposeInMainWorld("vingester", {
         cfg,
         log (...args) {
-            log.info(...args)
+            // log.info(...args)
+            // electron.ipcRenderer.sendTo(cfg.workerId, "content-log", ...args)
+            console.log(...args)
         },
         stat (data) {
             electron.ipcRenderer.sendTo(cfg.controlId, "stat", data)
@@ -67,4 +69,3 @@
         })
     }
 })()
-

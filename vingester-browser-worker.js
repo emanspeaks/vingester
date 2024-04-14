@@ -31,6 +31,7 @@ for (let i = process.argv.length - 1; i >= 0; i--) {
 
 /*  etablish reasonable logging environment  */
 const log = vingesterLog.scope(`browser/worker-${cfg.id}`)
+const contentlog = vingesterLog.scope(`browser/content-${cfg.id}`)
 
 /*  define Worker class  */
 class BrowserWorker {
@@ -153,6 +154,12 @@ class BrowserWorker {
         electron.ipcRenderer.on("video-capture", (ev, data, size, ratio, dirty) => {
             this.processVideo(data, size, ratio, dirty)
         })
+
+        // receive log messages
+        electron.ipcRenderer.on("content-log", (ev, ...args) => {
+            contentlog.info(...args)
+        })
+
         this.log.info("started")
     }
 
@@ -388,4 +395,3 @@ electron.ipcRenderer.on("browser-worker-stop", async (ev) => {
     await browserWorker.stop()
     electron.ipcRenderer.send("browser-worker-stopped")
 })
-

@@ -10,7 +10,9 @@ const fs           = require("fs")
 const os           = require("os")
 const path         = require("path")
 const AdmZip       = require("adm-zip")
-const got          = require("got")
+// const {got}          = require("got")
+// const got = (...args) => import('got').then(got => {return got.got(...args);});
+let got;
 const tmp          = require("tmp")
 const dayjs        = require("dayjs")
 const mkdirp       = require("mkdirp")
@@ -81,7 +83,10 @@ module.exports = class Update {
         /*  determine available versions  */
         if (progress)
             progress("downloading application version information", 0.0)
-        const req = got({
+        if (got === undefined) {
+            got = await import('got');
+        }
+        const req = got.got({
             method:       "GET",
             url:          this.options.urlVersion,
             headers:      { "User-Agent": `${pjson.name}/${pjson.version}` },
@@ -300,4 +305,3 @@ module.exports = class Update {
         await updateHelper.cleanup()
     }
 }
-

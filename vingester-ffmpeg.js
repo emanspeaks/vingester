@@ -8,7 +8,8 @@
 const EventEmitter = require("events")
 
 /*  external requirements  */
-const execa        = require("execa")
+// const execa        = require("execa")
+const execa = (...args) => import('execa').then(execa => {return execa.execa(...args);});
 const which        = require("which")
 
 /*  the exported API  */
@@ -272,4 +273,3 @@ module.exports = class FFmpeg extends EventEmitter {
         return Promise.resolve(true)
     }
 }
-
